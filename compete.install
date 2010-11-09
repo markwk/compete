@@ -6,6 +6,20 @@
  * @file
  * Installation file for the Compete module.
  */
+function compete_install() {
+  $result = db_query('SELECT * FROM {role} ORDER BY name');
+
+  while ($role = db_fetch_object($result)) {
+    $role_varname = $string = str_replace(" ", "_", $role->name);
+    $compete_role = "compete_track_{$role_varname}";
+
+    //check if variable is not already set from a previous install
+    if (strpos(variable_get($compete_role, 'new'), 'new') !== FALSE) {
+      variable_set($compete_role, TRUE);
+      drupal_set_message(t('Role %rolename is now being tracked by SiteCatalyst', array('%rolename' => $role->name)));
+    }
+  }
+}
 
 function compete_uninstall() {
   variable_del('compete');

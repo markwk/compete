@@ -33,14 +33,46 @@ function compete_menu() {
 }
 
 function compete_footer($main = 0) {
-  
-  $snippet = variable_get('compete', '');
-    
-  if (!empty($snippet)) {
-    return $snippet;
-  }
-  else {
-    return '';
-  }
+  global $user;
+	
+	// Check if we should track the currently active user's role
+	$track = 0;
+	if (is_array($user->roles)) {
+		foreach ($user->roles as $role) {
+			$role = str_replace(' ', '_', $role);
+			$track += variable_get("compete_track_{$role}", FALSE);
+		}
+	}
+	
+	// Don't track page views in the admin sections, or for certain roles
+	if (arg(0) != 'admin' && $track > 0) {
+		$snippet = variable_get('compete', '');
+		
+		if (!empty($snippet)) {
+			return $snippet;
+		}
+		else {
+			return '';
+		}
+	}  
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
