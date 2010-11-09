@@ -1,0 +1,12 @@
+<?php
+
+// $Id$
+
+/**
+ * @file
+ * Installation file for the Compete module.
+ */
+
+function compete_uninstall() {
+  variable_del('compete');
+}

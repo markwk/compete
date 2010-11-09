@@ -1,0 +1,46 @@
+<?php 
+/**
+* @file
+* Drupal Module: Compete
+* Provides integration with Compete.com. 
+* @Author: Jason Savino. <a href="http://zeisan.com">Zeisan</a>
+*/
+
+
+/** 
+* hook_perm implementation
+*/ 
+function compete_perm() {
+  return array('administer compete');
+}
+
+/**
+* hook_menu() implementation
+*/
+function compete_menu() {
+
+  $items['admin/settings/compete'] = array(
+    'title' => 'Compete',
+    'description' => 'Configure the settings for Compete.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('compete_admin_settings_form'),
+    'access arguments' => array('administer compete'),
+    'file' => 'compete.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function compete_footer($main = 0) {
+  
+  $snippet = variable_get('compete', '');
+    
+  if (!empty($snippet)) {
+    return $snippet;
+  }
+  else {
+    return '';
+  }
+}
+
