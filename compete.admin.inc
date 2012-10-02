@@ -1,5 +1,6 @@
 <?php
 
+// $Id: compete.admin.inc,v 1.1.2.2 2010/11/09 16:21:36 jasonrsavino Exp $
 
 /**
  * @file
@@ -7,9 +8,9 @@
  */
 
 /**
- * Implementation of hook_admin_settings()
+ * Implements hook_admin_settings().
  */
-function compete_admin_settings_form(&$form_state) {
+function compete_admin_settings_form($form, &$form_state) {
 
   $form['compete'] = array(
     '#type' => 'textarea',
@@ -18,21 +19,21 @@ function compete_admin_settings_form(&$form_state) {
     '#size' => 20,
     '#rows' => 7,
     '#required' => TRUE,
-    '#description' => t('If you do not already have a Compete Tag, please acquire it by registering at: !link', array('!link'=>l('http://www.compete.com/user/signup','http://www.compete.com/user/signup'))),
+    '#description' => t('If you do not already have a Compete Tag, please acquire it by registering at: !link', array('!link' => l('http://www.compete.com/user/signup', 'http://www.compete.com/user/signup'))),
   );
-  
-    // Render the role overview.
+
+  // Render the role overview.
   $result = db_query('SELECT * FROM {role} ORDER BY name');
 
   $form['roles'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('User Role Tracking'),
-        '#collapsible' => TRUE,
-        '#description' => t('Define what user roles should be tracked by Compete.')
+    '#type' => 'fieldset',
+    '#title' => t('User Role Tracking'),
+    '#collapsible' => TRUE,
+    '#description' => t('Define what user roles should be tracked by Compete.'),
   );
 
-  while ($role = db_fetch_object($result)) {
-     // can't use empty spaces in varname
+ foreach ($result as $role) {
+    // can't use empty spaces in varname
     $role_varname = $string = str_replace(' ', '_', $role->name);
     $form['roles']["compete_track_{$role_varname}"] = array(
       '#type' => 'checkbox',

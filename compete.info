@@ -1,10 +1,7 @@
 name = Compete
 description = Integration with compete.com.
 package = Analytics
-core = 6.x
-; Information added by drupal.org packaging script on 2010-11-09
-version = "6.x-1.0"
-core = "6.x"
-project = "compete"
-datestamp = "1289273460"
+core = 7.x
+version = "7.x-1.0"
+configure = admin/config/services/compete
 

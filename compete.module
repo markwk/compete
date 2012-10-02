@@ -1,25 +1,31 @@
-<?php 
+<?php
+
 /**
-* @file
-* Drupal Module: Compete
-* Provides integration with Compete.com. 
-* @Author: Jason Savino. <a href="http://zeisan.com">Zeisan</a>
-*/
+ * @file
+ * Drupal Module: Compete
+ * Provides integration with Compete.com.
+ * @Author: Jason Savino. <a href="http://zeisan.com">Zeisan</a>
+ */
 
 
-/** 
-* hook_perm implementation
-*/ 
-function compete_perm() {
-  return array('administer compete');
+/**
+ * hook_permission implementation
+ */
+function compete_permission() {
+  return array(
+    'administer compete' => array(
+      'title' => t('administer compete'),
+      'description' => t('TODO Add a description for \'administer compete\''),
+    ),
+  );
 }
 
 /**
-* hook_menu() implementation
-*/
+ * hook_menu() implementation
+ */
 function compete_menu() {
 
-  $items['admin/settings/compete'] = array(
+  $items['admin/config/services/compete'] = array(
     'title' => 'Compete',
     'description' => 'Configure the settings for Compete.',
     'page callback' => 'drupal_get_form',
@@ -32,30 +38,29 @@ function compete_menu() {
   return $items;
 }
 
-function compete_footer($main = 0) {
+/**
+ * Implements hook_page_alter().
+ */
+function compete_page_alter(&$page) {
   global $user;
-	
-	// Check if we should track the currently active user's role
-	$track = 0;
-	if (is_array($user->roles)) {
-		foreach ($user->roles as $role) {
-			$role = str_replace(' ', '_', $role);
-			$track += variable_get("compete_track_{$role}", FALSE);
-		}
-	}
-	
-	// Don't track page views in the admin sections, or for certain roles
-	if (arg(0) != 'admin' && $track > 0) {
-		$snippet = variable_get('compete', '');
-		
-		if (!empty($snippet)) {
-			return $snippet;
-		}
-		else {
-			return '';
-		}
-	}  
 
+  // Check if we should track the currently active user's role
+  $track = 0;
+  if (is_array($user->roles)) {
+    foreach ($user->roles as $role) {
+      $role = str_replace(' ', '_', $role);
+      $track += variable_get("compete_track_{$role}", FALSE);
+    }
+  }
+
+  // Don't track page views in the admin sections, or for certain roles
+  if (arg(0) != 'admin' && $track > 0) {
+    $snippet = variable_get('compete', '');
+
+    if (!empty($snippet)) {
+      $page['page_bottom']['compete'] = array('#markup' => $snippet);
+    }
+  }
 }
 
 
